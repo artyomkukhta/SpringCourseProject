@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="${title}"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/font.css"/>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+
+  <div class="container mt-5 mb-5">
+    <h1>Добавление сервиса для оплаты</h1>
+    <form action="/cells/addCell" method="post" th:object="${paymentCell}">
+      <input  type="text" name="name" placeholder="Название сервиса" class="form-control">
+      <span class="validationError font-red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/><br>
+      <input  type="text" name="type" placeholder="Тип" class="form-control">
+      <span class="validationError font-red" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"/><br>
+      <textarea  type="text" cols="20" name="desc" placeholder="Описание" class="form-control"></textarea>
+      <span class="validationError font-red" th:if="${#fields.hasErrors('desc')}" th:errors="*{desc}"/><br>
+      <button type="submit" class="btn btn-success">Добавить</button>
+    </form>
+  </div>
+
+<div  th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

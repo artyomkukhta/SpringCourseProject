@@ -1,0 +1,22 @@
+.card-container{
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 20px 40px;
+  border-radius: 5px;
+}
+.card-container{
+  position: relative;
+  margin: 20px 0 40px;
+  width: 300px;
+  background-color: #ccf4fa;
+  color: black;
+}
+.center {
+ border: 5px rgba(0, 0, 0, 0.4);
+     text-align: center;
+}
+
+.page-container{
+                 width: 84%;
+                  margin:auto;
+                   margin: 0 auto;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font.css"/>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container mt-5 mb-5">
+    <h1 class="mt-5">Cards page</h1>
+    <a th:href="@{'/userId' + ${userId} + '/cards/add'}" class="btn btn-primary">Add new card</a>
+    <p>Sort by:<span><a
+            th:href="@{'/userId' + ${userId} + '/cards/page/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">
+    name</a></span>
+        <span><a
+                th:href="@{'/userId' + ${userId} + '/cards/page/' + ${currentPage} + '?sortField=balance&sortDir=' + ${reverseSortDir}}">
+    balance</a></span></p>
+    <div th:each="el : ${cards}" class="alert alert-info mt-2">
+        <h3 th:text="${el.name}"/>
+        <p th:text="'Number: ' + ${el.number}"/>
+        <p th:text="'Balance: ' +${el.balance}"/>
+        <p>
+            Status: <span class="font-red" th:if="${el.isBlocked}">Blocked</span><span class="font-green"
+                                                                                       th:if="${!el.isBlocked}">Active</span>
+        </p>
+        <div class="div-inline">
+            <a th:href="'/userId'+ ${userId} + '/cards/id' + ${el.id}+'/deposit'" class="btn btn-success">Deposit</a>
+            <a th:href="'/userId'+${userId}+'/cards/id' + ${el.id}" class="btn btn-warning">Details</a>
+            <br><br>
+        </div>
+    </div>
+    <div th:if="${totalPages > 1}">
+        <div class="row col-sm-10">
+            <div class="col-sm-2">
+                total cards: [[${totalItems}]]
+            </div>
+            <div class="col-sm-1">
+      <span th:each="i:${#numbers.sequence(1, totalPages)}">
+        <a th:if="${currentPage != i}" th:href="@{'/userId' + ${userId} +'/cards/page/' +
+        ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+        <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp;&nbsp;
+      </span>
+            </div>
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/userId' + ${userId} +'/cards/page/' +
+         ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+                <span th:unless="${currentPage < totalPages}">Next</span> &nbsp;&nbsp;
+            </div>
+            <div class="col-sm-1">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/userId' + ${userId} +'/cards/page/' +
+         ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+                <span th:unless="${currentPage < totalPages}">Last</span> &nbsp;&nbsp;
+            </div>
+        </div>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>
