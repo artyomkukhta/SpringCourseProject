@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Spring Security Example </title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="/css/reg.css"/>
+    <link rel="stylesheet" href="/css/font.css"/>
+</head>
+<body>
+
+<div class="container">
+    <p class="text center">
+        Registration
+    </p>
+    <p class="font-red">[[${message}]]</p>
+    <form th:action="@{/registration}" method="post">
+        <div class="form-control" th:object="${user}">
+            <input required type="text" th:field="*{username}" name="username"/>
+            <label>Login</label>
+            <span class="validationError font-red" th:if="${#fields.hasErrors('username')}"
+                  th:errors="*{username}"></span>
+        </div>
+        <div class="form-control" th:object="${user}">
+            <input required type="password" th:field="*{password}" name="password"/>
+            <label>Password</label>
+            <span class="validationError font-red" th:if="${#fields.hasErrors('password')}"
+                  th:errors="*{password}"/>
+        </div>
+        <div><input class="btn" type="submit" value="Register"/></div>
+        <p class="text">
+            Already have account? <a href="/login">Login</a></p>
+    </form>
+</div>
+<script src="/js/script.js"></script>
+</body>
+</html>

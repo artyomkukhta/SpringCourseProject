@@ -1,0 +1,7 @@
+.div-center {
+  width: 35%;
+  height: 80%;
+
+  /* Center horizontally*/
+  margin: 0 auto;
+}

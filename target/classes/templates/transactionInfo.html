@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyXtvPBUl3EEAp2tU6QD4F+2nVZ7C4x"
+          crossorigin="anonymous"/>
+    <link rel="stylesheet" href="/css/cardInfo.css"/>
+</head>
+<body>
+
+<header th:insert="blocks/header :: header"></header>
+
+<div class="container mt-5 mb-5">
+    <form method="post" th:object="${transaction}">
+        <h1>Service</h1>
+        <div class="alert alert-info mt-2">
+            <div th:object="${paymentCell}">
+                <h3 th:text="${paymentCell.name}"/>
+                <p th:text="'Type: '+${paymentCell.type}"/>
+                <p th:text="'Description: ' + ${paymentCell.desc}"/>
+            </div>
+            <p class="div-inline">Amount: <input type="text" size="2" th:field="*{amount}" name="amount"/> BYN</p>
+            <span class="validationError font-red" th:if="${#fields.hasErrors('amount')}" th:errors="*{amount}"/>
+        </div>
+        <fieldset id="cards">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <h2>Cards</h2>
+            <div th:each="el : ${cards}" class="alert alert-info mt-2 row">
+                <input class="column1" name="cards" type="radio" th:field="*{card}" th:value="${el.id}"/>
+                <div class="column2">
+                    <div class="card-container">
+                        <div class="card-info-column">
+                            <h3 th:if="${el.id == optimalCard.id}" class="font-green">Optimal</h3>
+                            <h3 th:text="${el.getName()}"/>
+                            <p th:text="${el.getCardType().getName()}"/>
+                            <p th:text="'Number: ' + ${el.getNumber()}"/>
+                            <p th:text="'Balance: ' +${el.getBalance()}"/>
+                        </div>
+                        <div class="card-info-column">
+                            <p th:text="'Cashback: ' +${el.getCardType().getCashback()}"/>
+                            <p th:text="'Commission: ' +${el.getCardType().getCommission()}"/>
+                            <p th:text="'Remaining sum up to limit: ' +${el.getCardType().getLimit()-el.getOperationSum()}"/>
+                            <p>
+                                Status: <span class="font-red" th:if="${el.isBlocked}">Blocked</span><span
+                                    class="font-green"
+                                    th:if="${!el.isBlocked}">Active</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+
+    </form>
+</div>
+
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

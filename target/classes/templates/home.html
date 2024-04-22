@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/card.css"/>
+    <link rel="stylesheet" href="/css/div.css"/>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container mt-5 mb-5 page-container">
+    <h1 class="mt-5 d-flex">Home page</h1>
+    <a th:if="${@userSecurity.hasAuthority('developers:write')}" href="/cells/addCell" class="btn btn-primary">Add
+        cell</a>
+    <div class="row">
+        <div th:each="el : ${paymentCells}" class="alert alert-info card-container mt-2 l  mx-2 col- ">
+            <h3 class="center" th:text="${el.name}"/>
+            <p th:text="'Type: ' + ${el.type}"/>
+            <p th:text="'Description: ' +${el.desc}"/>
+            <div class="div-inline">
+                <a th:href="'/transaction' + '/id' + ${el.id} + '/pay'"
+                   class="btn btn-success divInline">Pay</a>
+                <a th:href="'/cells/id' + ${el.id}" class="btn btn-warning divInline">Details</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>
