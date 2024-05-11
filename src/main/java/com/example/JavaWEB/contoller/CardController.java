@@ -12,14 +12,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Controller
 @Slf4j
@@ -46,9 +46,15 @@ public class CardController {
     @GetMapping("/userId{userId}/cards/add")
     public String cardsAdd(@PathVariable(value = "userId") Long userId, Model model) {
         model.addAttribute("card", new CardView());
-        model.addAttribute("cardType", "");
+
+        List<String> names = StreamSupport.stream(cardTypeServiceImpl.findAll().spliterator(), false)
+                .map(CardType::getName)
+                .collect(Collectors.toList());
+
+        model.addAttribute("cardTypes", names);
         return "cardsAdd";
     }
+
     @PostMapping("/userId{userId}/cards/add")
     public String cardsAddPost(@PathVariable(value = "userId") Long userId, @Valid CardView cardView, Errors errors){
         if (errors.hasErrors()){
@@ -58,7 +64,7 @@ public class CardController {
 
         Optional<CardType> cardTypeFromDB = cardTypeServiceImpl.findByName(cardView.getCardType());
         if (!cardTypeFromDB.isPresent()){
-            log.info("HUETA");
+
             return "cardsAdd";
         }
         Card card = new Card(cardView.getName(),

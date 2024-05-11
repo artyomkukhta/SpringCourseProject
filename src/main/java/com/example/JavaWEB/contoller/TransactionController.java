@@ -65,32 +65,6 @@ public class TransactionController {
         List<Card> userCards = StreamSupport.stream(userServiceImpl.findAllUserCards().spliterator(), false)
                 .collect(Collectors.toList());
 
-        List<Card> userCardsByOptimality = new ArrayList<>();
-
-        int userCardsOriginalSize = userCards.size();
-
-
-
-       /* Card optimalCard = new Card();
-        for (int i=0; i < userCardsOriginalSize-1; i++) {
-
-            Optimization optimization = new Optimization();
-
-            optimalCard = optimization.calculate(userCards);
-
-            // userCards.remove(optimalCard);
-            userCards.remove(optimalCard);
-            userCardsByOptimality.add(optimalCard);
-        }
-
-        userCardsByOptimality.addAll(userCards);
-
-        optimalCard = userCardsByOptimality.get(0);
-
-        model.addAttribute("paymentCell", paymentCellServiceImpl.findById(id).get());
-        model.addAttribute("cards", userCardsByOptimality);
-        model.addAttribute("optimalCard", optimalCard);*/
-
         model.addAttribute("paymentCell", paymentCellServiceImpl.findById(id).get());
         Card optimalCard = new Optimization().calculate(userCards);
         userCards.remove(optimalCard);

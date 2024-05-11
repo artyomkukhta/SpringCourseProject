@@ -38,6 +38,19 @@ public class Card {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Card(String name, CardType cardType, String number, double balance, boolean isBlocked) {
+        this.cardType = cardType;
+        this.name = name;
+        this.number = number;
+        this.balance = balance;
+        this.isBlocked = isBlocked;
+        this.operationSum = 0;
+    }
+
+
+    public Card() {
+    }
+
     public User getUser() {
         return user;
     }
@@ -52,21 +65,6 @@ public class Card {
     public void setTransactions(Set<Transaction> transactions) {
         this.transactions = transactions;
     }
-
-    public Card(String name, CardType cardType, String number, double balance, boolean isBlocked) {
-        this.cardType = cardType;
-        this.name = name;
-        this.number = number;
-        this.balance = balance;
-        this.isBlocked = isBlocked;
-        this.operationSum = 0;
-    }
-
-
-    public Card() {
-    }
-
-
 
     public Long getId() {
         return id;

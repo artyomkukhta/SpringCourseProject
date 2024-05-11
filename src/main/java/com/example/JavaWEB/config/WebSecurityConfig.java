@@ -1,9 +1,11 @@
 package com.example.JavaWEB.config;
 
+import com.example.JavaWEB.model.Permission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,8 +19,8 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
-    private UserDetailsService userDetailsService;
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final UserDetailsService userDetailsService;
 
     @Autowired
     public WebSecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
@@ -35,15 +37,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         http
                 .authorizeRequests()
                 .antMatchers("/start", "/registration", "/js/**", "/css/**").permitAll()
-                .antMatchers("/**").permitAll()
-                //         .antMatchers("/userId{userId}/**").access("@userSecurity.hasUserId(authentication, #userId)"
-                //               + "or hasAuthority('developers:write')")
-                //       .antMatchers("/cells/addCell", "/allusers").access("hasAuthority('developers:write')")
-                //       .antMatchers("/cells/id{id}/edit", "/cells/id{id}/remove").access("hasAuthority('developers:write')")
-                /*.antMatchers(HttpMethod.GET, "/addCell").hasAuthority(Permission.DEVELOPERS_READ.getPermission())//ограниченный доступ /api/**
-                .antMatchers(HttpMethod.POST, "/addCell").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())//ограниченный доступ /api/**
-                .antMatchers(HttpMethod.DELETE, "/addCell").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())//ограниченный доступ /api/**
-               */.anyRequest().authenticated()
+                .antMatchers("/userId{userId}/**").access("@userSecurity.hasUserId(authentication, #userId)"
+                        + "or hasAuthority('developers:write')")
+                .antMatchers("/cells/addCell", "/allusers").access("hasAuthority('developers:write')")
+                .antMatchers("/cells/id{id}/edit", "/cells/id{id}/remove").access("hasAuthority('developers:write')")
+                .antMatchers(HttpMethod.GET, "/addCell").hasAuthority(Permission.DEVELOPERS_READ.getPermission())
+                .antMatchers(HttpMethod.POST, "/addCell").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())
+                .antMatchers(HttpMethod.DELETE, "/addCell").hasAuthority(Permission.DEVELOPERS_WRITE.getPermission())
+                .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler())
