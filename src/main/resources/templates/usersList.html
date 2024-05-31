@@ -8,11 +8,10 @@
 </head>
 <body>
 <header th:insert="blocks/header :: header"></header>
-<div class="container mt-5 mb-5">
-    <h1 class="mt-5">User list</h1>
+<div class="container mb-5">
+    <h1>User list</h1>
     <div th:each="el : ${users}" class="alert alert-info mt-2 div-inline">
         <h3 th:text="${el.username}"/>
-        <p th:text="'Email: ' + ${el.email}"/>
         <p th:text="'Role: ' +${el.role}"/>
         <a th:href="'/userId'+ ${el.id}" class="btn btn-primary">Go to profile</a>
     </div>

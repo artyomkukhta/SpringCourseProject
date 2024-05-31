@@ -24,7 +24,7 @@ public class CardServiceImpl implements CardService {
     private final UserRepository userRepository;
     private final TransactionRepository transactionRepository;
 
-    private final UserServiceImpl userServiceImpl;//хзхз
+    private final UserServiceImpl userServiceImpl;
 
     @Autowired
     public CardServiceImpl(CardRepository cardRepository, UserRepository userRepository, TransactionRepository transactionRepository, UserServiceImpl userServiceImpl) {
@@ -45,10 +45,6 @@ public class CardServiceImpl implements CardService {
     }
 
     public boolean add(Long userId, Card card) {
-
-
-        //     Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //что лучше
-        //    User user = userRepository.findByUsername(auth.getName());
         Optional<User> user = userRepository.findById(userId);
         user.get().getCards().add(card);
         card.setUser(user.get());
@@ -58,9 +54,7 @@ public class CardServiceImpl implements CardService {
     }
 
     public boolean add(Long userId, String name, CardType cardType, String number, double balance, boolean isBlocked) {
-        Card card = new Card(name, cardType ,number, balance, false);
-        //     Authentication auth = SecurityContextHolder.getContext().getAuthentication(); //что лучше
-        //    User user = userRepository.findByUsername(auth.getName());
+        Card card = new Card(name, cardType, number, balance, false);
         Optional<User> user = userRepository.findById(userId);
         card.setUser(user.get());
         user.get().getCards().add(card);
@@ -90,12 +84,10 @@ public class CardServiceImpl implements CardService {
     }
 
     public boolean existsById(Long id) {
-        if (cardRepository.existsById(id)) return true;
-        else return false;
+        return cardRepository.existsById(id);
     }
 
     public Page<Card> findPaginated(Long userId, int pageNo, int pageSize, String sortField, String sortDirection) {
-
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
 
@@ -104,12 +96,18 @@ public class CardServiceImpl implements CardService {
         Optional<User> user = userRepository.findById(userId);
         List<Card> cards = user.get().getCards();
 
-        return cardRepository.findAllByUser(user.get(), pageable);//sort вместо pageable
+        return cardRepository.findAllByUser(user.get(), pageable);
     }
+
     public boolean addBalanceById(Long cardId, double amount) {
         Card card = cardRepository.findById(cardId).get();
-        card.setBalance(card.getBalance()+amount);
+        card.setBalance(card.getBalance() + amount);
         cardRepository.save(card);
         return true;
     }
+
+    public void save(Card card) {
+        cardRepository.save(card);
+    }
+
 }

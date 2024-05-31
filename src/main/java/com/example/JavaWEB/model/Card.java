@@ -29,6 +29,7 @@ public class Card {
 
     @ManyToOne
     @JoinColumn(name = "card_type_id")
+    @NotNull(message = "You must select card type")
     private CardType cardType;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "card", cascade = CascadeType.ALL)

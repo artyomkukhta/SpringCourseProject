@@ -19,15 +19,14 @@ public class User {
     @NotNull
     @Size(min=3, message = "password must be at least 3 characters long")
     private String password;
-    /*@NotNull
-    @Size(min=3, message = "password must be at least 3 characters long")*/
+    @NotNull
+    @Size(min=3, message = "password must be at least 6 characters long")
     private String email;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
     private RoleClass role;
-//    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    //   @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private List<Card> cards;

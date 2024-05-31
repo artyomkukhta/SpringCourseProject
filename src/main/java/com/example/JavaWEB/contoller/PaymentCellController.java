@@ -18,11 +18,11 @@ import javax.validation.Valid;
 @Slf4j
 @RequestMapping(value = "/cells")
 @Controller
-public class PaymentController {
+public class PaymentCellController {
     private final PaymentCellServiceImpl paymentCellServiceImpl;
 
     @Autowired
-    public PaymentController(PaymentCellServiceImpl paymentCellServiceImpl) {
+    public PaymentCellController(PaymentCellServiceImpl paymentCellServiceImpl) {
 
         this.paymentCellServiceImpl = paymentCellServiceImpl;
     }

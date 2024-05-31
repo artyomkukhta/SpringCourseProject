@@ -1,54 +1,89 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${title}"/>
+    <title>Transaction Confirmation</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/font.css"/>
+    <style>
+        .card-custom-bg {
+            background-color: rgba(102, 219, 255, 0.53); /* Light blue color */
+            color: black; /* Ensure text is readable on the light blue background */
+            border: 1px solid #e1e4e8; /* Optional: Add a border similar to Bootstrap card borders */
+            height: 250px; /* Set a fixed height for the cards */
+            cursor: pointer;
+            position: relative;
+        }
+        .font-red {
+            color: red;
+        }
+        .font-green {
+            color: green;
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-content {
+            display: flex;
+            justify-content: space-between;
+        }
+        .card-info-column {
+            flex: 1;
+        }
+        .amount-input {
+            width: 100px; /* Adjust the width as needed */
+        }
+    </style>
 </head>
 <body>
 <header th:insert="blocks/header :: header"></header>
-<div class="container mt-5 mb-5">
-    <form method="post" th:object="${transaction}">
-        <h1>Submit transaction</h1>
-        <h2>Service</h2>
+<div class="container mb-5">
+    <h1>Transaction Confirmation</h1>
+    <form method="post" th:action="@{'/transaction/id' + ${transaction.id} + '/confirm'}">
+        <input type="hidden" th:value="${amount}" name="amount" />
+        <input type="hidden" th:value="${transaction.card.id}" name="cardId" />
         <div class="alert alert-info mt-2">
+            <h2>Service</h2>
             <div th:object="${paymentCell}">
-                <h3 th:text="${paymentCell.name}"/>
-                <p th:text="'Type: '+${paymentCell.type}"/>
-                <p th:text="'Description: ' + ${paymentCell.desc}"/>
+                <h3 th:text="${paymentCell.name}"></h3>
+                <p th:text="'Type: '+${paymentCell.type}"></p>
+                <p th:text="'Description: ' + ${paymentCell.desc}"></p>
             </div>
-            <p class="div-inline">Amount:  <input type="text" th:field="*{amount}" th:value="${amount}" name="amount" readonly
-                                                  class="form-control-plaintext"/></p>
-        </div>
-        <h2>Card</h2>
-        <p class="font-red">[[${message}]]</p>
-        <div class="alert alert-info mt-2">
-            <div class="col-sm">
-                <h3 th:text="${transaction.getCard().getName()}"/>
-                <p th:text="${transaction.getCard.getCardType().getName()}"/>
-                <p th:text="'Number: ' + ${transaction.getCard().getNumber()}"/>
-                <p th:text="'Balance: ' +${transaction.getCard().getBalance()}"/>
-                <p th:text="'Cashback: ' +${transaction.getCard().getCardType().getCashback()}"/>
-                <p th:text="'Commission: ' +${transaction.getCard().getCardType().getCommission()}"/>
-                <p th:text="'Remaining sum up to limit: ' +${transaction.getCard().getCardType().getLimit()-transaction.getCard().getOperationSum()}"/>
-                <p>
-                    Status: <span class="font-red" th:if="${transaction.getCard().getIsBlocked()}">Blocked</span><span class="font-green" th:if="${!transaction.card.isBlocked}">Active</span>
-                </p>
+            <h3>Amount</h3>
+            <p class="div-inline">Amount: <span th:text="${amount}"></span> BYN</p>
+            <p class="div-inline">Commission: <span th:text="${commissionAmount}"></span> BYN</p>
+            <p class="div-inline">Cashback: <span th:text="${cashbackAmount}"></span> BYN</p>
+            <p class="div-inline">Final Amount to be deducted: <span th:text="${finalAmount}"></span> BYN</p>
+            <h2>Card</h2>
+            <p class="font-red" th:if="${error}">[[${error}]]</p>
+            <div class="alert alert-info mt-2 card card-custom-bg">
+                <div class="card-body">
+                    <div class="card-content">
+                        <div class="card-info-column">
+                            <h3 th:text="${transaction.getCard().getName()}"></h3>
+                            <p th:text="${transaction.getCard().getCardType().getName()}"></p>
+                            <p th:text="'Number: ' + ${transaction.getCard().getNumber()}"></p>
+                            <p th:text="'Balance: ' + ${transaction.getCard().getBalance()}"></p>
+                        </div>
+                        <div class="card-info-column">
+                            <p th:text="'Cashback: ' + ${transaction.getCard().getCardType().getCashback()} + '%'"></p>
+                            <p th:text="'Commission: ' + ${transaction.getCard().getCardType().getCommission()} + '%'"></p>
+                            <p th:text="'Remaining sum up to limit: ' + (${transaction.getCard().getCardType().getLimit() - transaction.getCard().getOperationSum()})"></p>
+                            <p>
+                                Status: <span class="font-red" th:if="${transaction.getCard().getIsBlocked()}">Blocked</span>
+                                <span class="font-green" th:if="${!transaction.getCard().getIsBlocked()}">Active</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <!--<input th:value="${transaction.card.id}" name="cardId" class="form-control-plaintext" readonly
-                   type="hidden"/>
-            <input th:value="${transaction.card.name}" name="name" class="form-control-plaintext" readonly/>
-            <input th:value="${transaction.card.number}" name="number" class="form-control-plaintext" readonly/>
-            <input th:value="${transaction.card.balance}" name="balance" class="form-control-plaintext" readonly/>
-            <input th:value="${transaction.card.isBlocked}" name="isBlocked" class="form-control-plaintext" readonly/>-->
+            <button type="submit" class="btn btn-success">Confirm</button>
+            <input type="button" class="btn btn-danger" onclick="history.back();" value="Back"/>
         </div>
-        <button type="submit" class="btn btn-success">Submit</button>
-        <input type="button" class="btn btn-danger" onclick="history.back();" value="Back"/>
     </form>
 </div>
-
 <div th:insert="blocks/footer :: footer"></div>
 </body>
 </html>

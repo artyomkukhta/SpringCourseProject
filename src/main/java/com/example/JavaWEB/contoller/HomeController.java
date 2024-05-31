@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 @Slf4j
 @Controller
 public class HomeController {
@@ -13,19 +15,25 @@ public class HomeController {
 
     @Autowired
     public HomeController(PaymentCellServiceImpl paymentCellServiceImpl) {
-
         this.paymentCellServiceImpl = paymentCellServiceImpl;
     }
+
     @GetMapping("/cells")
     public String home(Model model) {
         model.addAttribute("paymentCells", paymentCellServiceImpl.findAll());
         return "home";
     }
 
-
     @GetMapping("/about")
     public String about(Model model) {
         model.addAttribute("title", "About page");
         return "about";
+    }
+
+    @GetMapping("/cells/search")
+    public String search(@RequestParam("query") String query, Model model) {
+        model.addAttribute("paymentCells", paymentCellServiceImpl.searchByName(query));
+        model.addAttribute("query", query);
+        return "home";
     }
 }

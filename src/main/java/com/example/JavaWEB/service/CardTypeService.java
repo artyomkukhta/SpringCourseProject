@@ -1,5 +1,6 @@
 package com.example.JavaWEB.service;
 
+import com.example.JavaWEB.model.Card;
 import com.example.JavaWEB.model.CardType;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +22,5 @@ public interface CardTypeService{
 
     public boolean editById(Long id, CardType cardType);
     public boolean existsById(Long id);
+    public CardType save(CardType cardType);
 }

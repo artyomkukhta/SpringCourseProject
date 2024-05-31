@@ -1,27 +1,92 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${title}"/>
+    <title th:text="${title}">Home</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/card.css"/>
     <link rel="stylesheet" href="/css/div.css"/>
+    <style>
+        .search-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .search-form {
+            display: flex;
+            align-items: center;
+        }
+        .search-form .form-control {
+            margin-right: 10px;
+        }
+        .tiles-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+        .card-container {
+            width: 300px; /* Fixed width for all cards */
+            min-height: 200px; /* Minimum height for all cards */
+            margin-bottom: 20px;
+            overflow: hidden; /* Hide overflow content */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px; /* Padding to prevent text overlap */
+            text-align: center; /* Center-align text within cards */
+        }
+        .card-container h3 {
+            overflow: hidden; /* Ensure text overflow is hidden */
+            text-overflow: ellipsis;
+            white-space: normal; /* Allow text to wrap */
+            margin-bottom: 10px; /* Margin to prevent overlap */
+        }
+        .card-container p {
+            overflow: hidden; /* Ensure text overflow is hidden */
+            text-overflow: ellipsis;
+            white-space: normal; /* Allow text to wrap */
+            margin-bottom: 10px; /* Margin to prevent overlap */
+            text-align: left; /* Align text to the left */
+            width: 100%; /* Ensure full width */
+        }
+        .div-inline {
+            display: flex;
+            justify-content: center; /* Center the buttons */
+            width: 100%;
+            gap: 10px; /* Ensure buttons are next to each other without space */
+        }
+        .div-inline a {
+            flex-grow: 1; /* Make buttons equal width and next to each other */
+        }
+    </style>
 </head>
 <body>
 <header th:insert="blocks/header :: header"></header>
-<div class="container mt-5 mb-5 page-container">
-    <h1 class="mt-5 d-flex">Home page</h1>
-    <a th:if="${@userSecurity.hasAuthority('developers:write')}" href="/cells/addCell" class="btn btn-primary">Add
-        cell</a>
-    <div class="row">
-        <div th:each="el : ${paymentCells}" class="alert alert-info card-container mt-2 l  mx-2 col- ">
-            <h3 class="center" th:text="${el.name}"/>
-            <p th:text="'Type: ' + ${el.type}"/>
-            <p th:text="'Description: ' +${el.desc}"/>
-            <div class="div-inline">
-                <a th:href="'/transaction' + '/id' + ${el.id} + '/pay'"
-                   class="btn btn-success divInline">Pay</a>
-                <a th:href="'/cells/id' + ${el.id}" class="btn btn-warning divInline">Details</a>
+<div class="container mb-5 page-container">
+    <h1 class="d-flex">Services</h1>
+    <div class="search-container">
+        <a th:if="${@userSecurity.hasAuthority('developers:write')}" href="/cells/addCell" class="btn btn-primary">Add service</a>
+        <form action="/cells/search" method="get" class="search-form">
+            <input type="text" name="query" class="form-control" placeholder="Search for a service"
+                   th:value="${query}"/>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+    <div class="row justify-content-center">
+        <div th:if="${paymentCells.isEmpty()}" class="alert alert-warning" role="alert">
+            No services found.
+        </div>
+        <div class="tiles-container">
+            <div th:each="el : ${paymentCells}" class="alert alert-info card-container mx-2 d-flex flex-column align-items-center">
+                <h3 class="center" th:text="${el.name}"></h3>
+                <p th:text="'Type: ' + ${el.type}"></p>
+                <p th:text="'Description: ' + ${el.desc}"></p>
+                <div class="div-inline">
+                    <a th:href="'/transaction' + '/id' + ${el.id} + '/pay'" class="btn btn-success divInline">Pay</a>
+                    <a th:href="'/cells/id' + ${el.id}" class="btn btn-warning divInline">Details</a>
+                </div>
             </div>
         </div>
     </div>

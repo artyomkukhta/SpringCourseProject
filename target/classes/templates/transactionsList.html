@@ -1,52 +1,70 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title th:text="${title}"/>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>Список Транзакций</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+  <style>
+    .content {
+      margin-top: 20px;
+    }
+
+    table {
+      background-color: lightblue;
+    }
+  </style>
 </head>
 <body>
 <header th:insert="blocks/header :: header"></header>
-<div class="container mt-5 mb-5">
-  <h1>Transactions</h1>
-  <p>Sort by:<span><a th:href="@{'/userId' + ${userId} + '/transactions/page/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">
-    name</a></span>
-  <span><a th:href="@{'/userId' + ${userId} + '/transactions/page/' + ${currentPage} + '?sortField=amount&sortDir=' + ${reverseSortDir}}">
-    amount</a></span></p>
-  <div th:each = "el : ${transactions}" class = "alert alert-info mt-2">
-    <h3 th:text="${el.name}" name="paymentName"/>
-    <p th:text="'Card name: '+ ${el.card.name}"/>
-    <p th:text="'Card number: ' + ${el.card.number}"/>
-    <p th:text="'Amount: ' + ${el.amount}"/>
-    <p th:text="'Status: ' + ${el.status}"/>
-    <p th:text="${el.date}"/>
-  </div>
-<div th:if="${totalPages > 1}">
-  <div class="row col-sm-10">
-    <div class="col-sm-2">
-      total transactions: [[${totalItems}]]
-    </div>
-    <div class="col-sm-1">
-      <span th:each="i:${#numbers.sequence(1, totalPages)}">
-        <a th:if="${currentPage != i}" th:href="@{'/userId' + ${userId} +'/transactions/page/' +
-        ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
-        <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp;&nbsp;
-      </span>
-    </div>
-    <div class="col-sm-1">
-        <a th:if="${currentPage < totalPages}" th:href="@{'/userId' + ${userId} +'/transactions/page/' +
-         ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
-        <span th:unless="${currentPage < totalPages}">Next</span> &nbsp;&nbsp;
-    </div>
-    <div class="col-sm-1">
-      <a th:if="${currentPage < totalPages}" th:href="@{'/userId' + ${userId} +'/transactions/page/' +
-         ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
-        <span th:unless="${currentPage < totalPages}">Last</span> &nbsp;&nbsp;
+<div class="container content">
+  <h1>History of transactions</h1>
+  <p>Sort by:
+    <span><a th:href="@{'/userId' + ${userId} + '/transactions/page/' + ${currentPage} + '?sortField=name&sortDir=' + ${reverseSortDir}}">name</a></span>
+    <span><a th:href="@{'/userId' + ${userId} + '/transactions/page/' + ${currentPage} + '?sortField=amount&sortDir=' + ${reverseSortDir}}">sum</a></span>
+    <span><a th:href="@{'/userId' + ${userId} + '/transactions/page/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}">date</a></span>
+  </p>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Название</th>
+      <th>Название Карты</th>
+      <th>Тип Карты</th>
+      <th>Номер Карты</th>
+      <th>Сумма</th>
+      <th>Статус</th>
+      <th>Дата</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="el : ${transactions}">
+      <td th:text="${el.name}"></td>
+      <td th:text="${el.card.name}"></td>
+      <td th:text="${el.card.cardType.name}"></td>
+      <td th:text="${el.card.number}"></td>
+      <td th:text="${el.amount}"></td>
+      <td th:text="${el.status}"></td>
+      <td th:text="${el.date}"></td>
+    </tr>
+    </tbody>
+  </table>
+  <div th:if="${totalPages > 1}">
+    <div class="row">
+      <div class="col-sm-2">
+        Всего транзакций: [[${totalItems}]]
+      </div>
+      <div class="col-sm-10">
+                <span th:each="i : ${#numbers.sequence(1, totalPages)}">
+                    <a th:if="${currentPage != i}" th:href="@{'/userId' + ${userId} + '/transactions/page/' + ${i} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+                    <span th:unless="${currentPage != i}">[[${i}]]</span> &nbsp;&nbsp;
+                </span>
+        <a th:if="${currentPage < totalPages}" th:href="@{'/userId' + ${userId} + '/transactions/page/' + ${currentPage + 1} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Следующая</a>
+        <span th:unless="${currentPage < totalPages}">Следующая</span> &nbsp;&nbsp;
+        <a th:if="${currentPage < totalPages}" th:href="@{'/userId' + ${userId} + '/transactions/page/' + ${totalPages} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Последняя</a>
+        <span th:unless="${currentPage < totalPages}">Последняя</span> &nbsp;&nbsp;
+      </div>
     </div>
   </div>
 </div>
-</div>
-
-<div  th:insert="blocks/footer :: footer"></div>
+<div th:insert="blocks/footer :: footer"></div>
 </body>
 </html>

@@ -23,4 +23,6 @@ public interface TransactionService {
     public String handleTransaction(Long cellId, Card selectedCard, double amount) throws Exception;
 
     public Page<Transaction> findPaginated(Long userId, int pageNo, int pageSize, String sortField, String sortDirection);
+     void transferByNumber(Long fromCardId, String toCardNumber, Double amount);
+     void transferById(Long fromCardId, Long toCardId, Double amount);
 }

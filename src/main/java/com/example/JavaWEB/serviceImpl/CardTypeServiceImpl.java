@@ -61,4 +61,9 @@ public class CardTypeServiceImpl implements CardTypeService {
     public boolean existsById(Long id) {
         return false;
     }
+
+    @Override
+    public CardType save(CardType cardType) {
+        return cardTypeRepository.save(cardType);
+    }
 }

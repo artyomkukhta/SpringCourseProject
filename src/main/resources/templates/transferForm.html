@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <title>Transfer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <style>
+        .form-label-inline {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .form-value-inline {
+            display: inline-block;
+        }
+    </style>
+    <script>
+        function toggleTransferType() {
+            const transferType = document.querySelector('input[name="transferType"]:checked').value;
+            document.getElementById('toCardSelection').style.display = transferType === 'select' ? 'block' : 'none';
+            document.getElementById('toCardNumber').style.display = transferType === 'number' ? 'block' : 'none';
+        }
+
+        function calculateActualAmount() {
+            const amount = parseFloat(document.getElementById('amount').value) || 0;
+            const commissionRate = parseFloat(document.getElementById('commissionRate').value) || 0;
+            const cashbackRate = parseFloat(document.getElementById('cashbackRate').value) || 0;
+            const commissionAmount = amount * commissionRate / 100;
+            const cashbackAmount = amount * cashbackRate / 100;
+            const actualAmount = amount + commissionAmount - cashbackAmount;
+
+            document.getElementById('commissionAmount').textContent = commissionAmount.toFixed(2);
+            document.getElementById('cashbackAmount').textContent = cashbackAmount.toFixed(2);
+            document.getElementById('actualAmount').textContent = actualAmount.toFixed(2);
+        }
+    </script>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container">
+    <h1>Transfer Funds</h1>
+    <form th:action="@{'/userId' + ${userId} + '/cards/transfer'}" method="post">
+        <div class="mb-3">
+            <label for="fromCardName" class="form-label">From Card</label>
+            <input type="text" class="form-control" id="fromCardName" name="fromCardName" th:value="${fromCardName}" readonly>
+            <label for="fromCardBalance" class="form-label">Available Balance</label>
+            <input type="text" class="form-control" id="fromCardBalance" name="fromCardBalance" th:value="${avaliableAmount}" readonly>
+            <input type="hidden" id="fromCardId" name="fromCardId" th:value="${fromCardId}">
+            <input type="hidden" id="commissionRate" name="commissionRate" th:value="${commissionRate}">
+            <input type="hidden" id="cashbackRate" name="cashbackRate" th:value="${cashbackRate}">
+        </div>
+
+        <!-- Error message display -->
+        <div th:if="${error != null and #strings.length(error) > 0}" class="alert alert-danger" role="alert">
+            <p th:text="${error}"></p>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Transfer Type</label><br>
+            <input type="radio" id="selectCard" name="transferType" value="select" onclick="toggleTransferType()" checked>
+            <label for="selectCard">Select Card</label><br>
+            <input type="radio" id="enterNumber" name="transferType" value="number" onclick="toggleTransferType()">
+            <label for="enterNumber">Enter Card Number</label>
+        </div>
+
+        <div id="toCardSelection" class="mb-3">
+            <label for="toCardId" class="form-label">To Card</label>
+            <select class="form-select" id="toCardId" name="toCardId">
+                <option th:each="card : ${cards}" th:value="${card.id}" th:text="${card.name}"></option>
+            </select>
+        </div>
+
+        <div id="toCardNumber" class="mb-3" style="display: none;">
+            <label for="toCardNumber" class="form-label">To Card Number</label>
+            <input type="text" class="form-control" id="toCardNumber" name="toCardNumber">
+        </div>
+
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount</label>
+            <input type="number" class="form-control" id="amount" name="amount" step="0.1" min="0.1" oninput="calculateActualAmount()" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label-inline">Commission Rate:</label>
+            <p class="form-value-inline" th:text="${commissionRate} + '%'"></p>
+            <label class="form-label-inline"> Commission:</label>
+            <p class="form-value-inline" id="commissionAmount"></p>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label-inline">Cashback Rate:</label>
+            <p class="form-value-inline" th:text="${cashbackRate} + '%'"></p>
+            <label class="form-label-inline"> Cashback:</label>
+            <p class="form-value-inline" id="cashbackAmount"></p>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Actual Amount to be Deducted (with Commission and Cashback):</label>
+            <p class="form-value-inline" id="actualAmount"></p>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Transfer</button>
+    </form>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

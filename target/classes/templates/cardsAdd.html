@@ -11,24 +11,20 @@
 <body>
 <header th:insert="blocks/header :: header"></header>
 
-<div class="container mt-5 mb-5">
-    <h1>Добавление карты</h1>
+<div class="container mb-5">
+    <h1>Add new card</h1>
     <form method="post" th:object = "${card}">
         <input type="text" th:value="${card.name}" name="name" placeholder="Название карты" class="form-control">
         <span class="validationError font-red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/><br>
-
-        <select name="cardType" class="form-select">
-            <option value="">Выберите тип карты</option>
+        <select th:field="*{cardType.id}" class="form-select">
+            <option value="">Select Card Type</option>
             <th:block th:each="type : ${cardTypes}">
-                <option th:value="${type}" th:text="${type}"></option>
+                <option th:value="${type.id}" th:text="${type.name}"></option>
             </th:block>
-        </select>
-
-        <input type="text" id="cardNumber" name="number" th:value="${card.number}" placeholder="Номер карты" class="form-control" maxlength="19" oninput="formatCardNumber()">
+        </select><br>
+        <span class="validationError font-red" th:if="${#fields.hasErrors('cardType')}" th:errors="*{cardType}"/>
+        <input type="text" id="cardNumber" name="number" th:value="${card.number}" placeholder="Card number" class="form-control" maxlength="19" oninput="formatCardNumber()">
         <span class="validationError font-red" th:if="${#fields.hasErrors('number')}" th:errors="*{number}"/>
-
-
-
         <div th:if="${@userSecurity.hasAuthority('developers:write')}" class="form-check form-switch">
             <label class="form-check-label" for="flexSwitchCheckDefault">
                 <p>

@@ -9,16 +9,16 @@
 <body>
 <header th:insert="blocks/header :: header"></header>
 
-  <div class="container mt-5 mb-5">
-    <h1>Добавление сервиса для оплаты</h1>
+  <div class="container mb-5">
+    <h1>New payment service</h1>
     <form action="/cells/addCell" method="post" th:object="${paymentCell}">
-      <input  type="text" name="name" placeholder="Название сервиса" class="form-control">
+      <input  type="text" name="name" placeholder="Service name" class="form-control">
       <span class="validationError font-red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/><br>
-      <input  type="text" name="type" placeholder="Тип" class="form-control">
+      <input  type="text" name="type" placeholder="Service type" class="form-control">
       <span class="validationError font-red" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"/><br>
-      <textarea  type="text" cols="20" name="desc" placeholder="Описание" class="form-control"></textarea>
+      <textarea  type="text" cols="20" name="desc" placeholder="Description" class="form-control"></textarea>
       <span class="validationError font-red" th:if="${#fields.hasErrors('desc')}" th:errors="*{desc}"/><br>
-      <button type="submit" class="btn btn-success">Добавить</button>
+      <button type="submit" class="btn btn-success">Save</button>
     </form>
   </div>
 
