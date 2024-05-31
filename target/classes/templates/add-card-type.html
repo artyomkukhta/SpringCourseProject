@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font.css"/>
+    <style>
+        .content {
+            margin-top: 20px; /* Отступ сверху для основного содержимого */
+        }
+    </style>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container content">
+    <h1>Добавить Тип Карты</h1>
+    <form th:action="@{'/userId' + ${userId} + '/cards/cardTypes/addCardType'}" th:object="${cardType}" method="post" class="container mb-5">
+        <div class="form-group">
+            <label for="name">Название</label>
+            <input type="text" id="name" th:field="*{name}" class="form-control" required/>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+        </div>
+        <div class="form-group">
+            <label for="cashback">Кэшбэк</label>
+            <input type="number" id="cashback" th:field="*{cashback}" required class="form-control"/>
+            <div th:if="${#fields.hasErrors('cashback')}" th:errors="*{cashback}" class="text-danger"></div>
+        </div>
+        <div class="form-group">
+            <label for="commission">Комиссия</label>
+            <input type="number" id="commission" th:field="*{commission}" required class="form-control"/>
+            <div th:if="${#fields.hasErrors('commission')}" th:errors="*{commission}" class="text-danger"></div>
+        </div>
+        <div class="form-group">
+            <label for="limit">Лимит</label>
+            <input type="number" id="limit" th:field="*{limit}" required class="form-control"/>
+            <div th:if="${#fields.hasErrors('limit')}" th:errors="*{limit}" class="text-danger"></div>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </div>
+    </form>
+</div>>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>

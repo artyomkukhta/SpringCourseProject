@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Список Типов Карт</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <style>
+        .content {
+            margin-top: 20px; /* Отступ сверху для основного содержимого */
+        }
+    </style>
+</head>
+<body>
+<header th:insert="blocks/header :: header"></header>
+<div class="container content">
+    <h1>Список Типов Карт</h1>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Кэшбэк</th>
+            <th>Комиссия</th>
+            <th>Лимит</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="cardType : ${cardTypes}">
+            <td th:text="${cardType.id}"></td>
+            <td th:text="${cardType.name}"></td>
+            <td th:text="${cardType.cashback}"></td>
+            <td th:text="${cardType.commission}"></td>
+            <td th:text="${cardType.limit}"></td>
+            <td>
+                <a th:href="@{'/userId' + ${userId} + '/cards/cardTypes/editCardType/' + ${cardType.id}}" class="btn btn-primary">Редактировать</a>
+                <a th:href="@{'/userId' + ${userId} + '/cards/cardTypes/deleteCardType/' + ${cardType.id}}" class="btn btn-danger">Удалить</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a th:href="@{'/userId' + ${userId} + '/cards/cardTypes/addCardType'}" class="btn btn-success">Добавить Новый Тип Карты</a>
+</div>
+<div th:insert="blocks/footer :: footer"></div>
+</body>
+</html>
